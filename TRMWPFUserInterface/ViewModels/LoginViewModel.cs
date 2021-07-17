@@ -2,6 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using TRMDesktopUI.Library.Api;
+using TRMWPFUserInterface.EventModels;
 
 namespace TRMWPFUserInterface.ViewModels
 {
@@ -10,9 +11,11 @@ namespace TRMWPFUserInterface.ViewModels
         private int _userName;
         private int _password;
         private IApiHelper _apiHelper;
-        public LoginViewModel(IApiHelper apiHelper)
+        private IEventAggregator _events;
+        public LoginViewModel(IApiHelper apiHelper, IEventAggregator events)
         {
             _apiHelper = apiHelper;
+            _events = events;
         }
 
         public int UserName
@@ -80,6 +83,8 @@ namespace TRMWPFUserInterface.ViewModels
                 ErrorMessage = string.Empty;
                 var result = await _apiHelper.Authenticate(userName, password);
                 await _apiHelper.GetLoggedInUserInfo(result.Access_Token);
+
+                await _events.PublishOnUIThreadAsync(new LogOnEvent());
             }
             catch(Exception ex)
             {
