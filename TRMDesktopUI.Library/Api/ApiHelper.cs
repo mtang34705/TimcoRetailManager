@@ -19,6 +19,7 @@ namespace TRMWPFUserInterface.Helpers
             _loggedInUser = loggedInUser;
         }
         private HttpClient _apiClient { get; set; }
+        public HttpClient ApiClient { get { return _apiClient; } }
         private void InitializeClient()
         {
             string api = ConfigurationManager.AppSettings["api"];
